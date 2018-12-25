@@ -1,9 +1,11 @@
 package com.coolweather.android;
 
-import android.support.v4.app.Fragment;
+
+
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,8 +55,9 @@ public class ChooseAreaFragment extends Fragment {
     /*当前选中的级别*/
     private int currentLevel;
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater,  ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.choose_area,container,false);
         titleText=(TextView)view.findViewById(R.id.title_text);
         backButton=(Button)view.findViewById(R.id.back_button);
@@ -162,7 +165,8 @@ public class ChooseAreaFragment extends Fragment {
                  result = Utility.handleCityResponse(responseText, selectedProvince.getId());
              } else if ("country".equals(type)) {
                          result = Utility.handleCountryResponse(responseText, selectedCity.getId());
-                         }if (result) {
+                         }
+                         if (result) {
                  getActivity().runOnUiThread(new Runnable() {
                         @Override
                          public void run() {
