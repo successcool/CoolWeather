@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coolweather.android.db.City;
-import com.coolweather.android.db.Country;
+import com.coolweather.android.db.County;
 import com.coolweather.android.db.Province;
 import com.coolweather.android.util.HttpUtil;
 import com.coolweather.android.util.Utility;
@@ -47,7 +47,7 @@ public class ChooseAreaFragment extends Fragment {
     /* 市列表*/
     private List<City>cityList;
     /* 县列表*/
-    private List<Country>countryList;
+    private List<County>countyList;
     /* 选中的省份*/
     private  Province selectedProvince;
     /* 选中的城市*/
@@ -57,7 +57,8 @@ public class ChooseAreaFragment extends Fragment {
 
 
     @Override
-    public View onCreateView( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, @Nullable ViewGroup container,
+                              @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.choose_area,container,false);
         titleText=(TextView)view.findViewById(R.id.title_text);
         backButton=(Button)view.findViewById(R.id.back_button);
@@ -135,12 +136,12 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCountries(){
         titleText.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
-        countryList = DataSupport.where("cityid=?",String.valueOf(selectedCity.getId())
-        ).find(Country.class);
-        if (countryList.size()>0){
+        countyList = DataSupport.where("cityid=?",String.valueOf(selectedCity.getId())
+        ).find(County.class);
+        if (countyList.size()>0){
             dataList.clear();
-            for (Country country : countryList){
-                dataList.add(country.getCountryName());
+            for (County county : countyList){
+                dataList.add(county.getCountyName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
@@ -158,13 +159,13 @@ public class ChooseAreaFragment extends Fragment {
          @Override
          public void onResponse(Call call, Response response) throws IOException {
              String responseText = response.body().string();
-             boolean result = false;
+             boolean result=false;
              if ("province".equals(type)) {
                  result = Utility.handleProvinceResponse(responseText);
                 } else if ("city".equals(type)) {
                  result = Utility.handleCityResponse(responseText, selectedProvince.getId());
-             } else if ("country".equals(type)) {
-                         result = Utility.handleCountryResponse(responseText, selectedCity.getId());
+             } else if ("county".equals(type)) {
+                 result = Utility.handleCountyResponse(responseText, selectedCity.getId());
                          }
                          if (result) {
                  getActivity().runOnUiThread(new Runnable() {
@@ -175,7 +176,7 @@ public class ChooseAreaFragment extends Fragment {
                                                               queryProvinces();
                                                         } else if ("city".equals(type)) {
                                                                queryCities();
-                                                          } else if ("country".equals(type)) {
+                                                          } else if ("county".equals(type)) {
                                                                queryCountries();
                                                              }
                                                    }

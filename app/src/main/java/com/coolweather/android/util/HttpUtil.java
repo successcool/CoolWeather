@@ -1,7 +1,5 @@
 package com.coolweather.android.util;
-import android.app.DownloadManager;
 
-import javax.xml.transform.OutputKeys;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

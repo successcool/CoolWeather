@@ -2,7 +2,7 @@ package com.coolweather.android.util;
 import android.text.TextUtils;
 
 import com.coolweather.android.db.City;
-import com.coolweather.android.db.Country;
+import com.coolweather.android.db.County;
 import com.coolweather.android.db.Province;
 
 import org.json.JSONArray;
@@ -47,14 +47,14 @@ public class Utility {
         }
         return false;
     }
-    public static  boolean handleCountryResponse(String response,int cityId){
+    public static  boolean handleCountyResponse(String response,int cityId){
         if (!TextUtils.isEmpty(response)){
             try{
                 JSONArray allCountries=new JSONArray(response);
                 for (int i=0;i<allCountries.length();i++){
                     JSONObject countryObject=allCountries.getJSONObject(i);
-                    Country country=new Country();
-                    country.setCountryName(countryObject.getString("name"));
+                    County country=new County();
+                    country.setCountyName(countryObject.getString("name"));
                     country.setWeatherId(countryObject.getString("weather_id"));
                     country.setCityId(cityId);
                     country.save();
