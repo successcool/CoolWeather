@@ -35,7 +35,7 @@ import okhttp3.Response;
 public class ChooseAreaFragment extends Fragment {
     public static final int LEVEL_PROVINCE=0;
     public static final int LEVEL_CITY=1;
-    public static final int LEVEL_COUNTRY=2;
+    public static final int LEVEL_COUNTY=2;
     private ProgressDialog progressDialog;
     private TextView titleText;
     private Button backButton;
@@ -80,14 +80,14 @@ public class ChooseAreaFragment extends Fragment {
                 }
                 else if (currentLevel==LEVEL_CITY){
                     selectedCity=cityList.get(position);
-                    queryCountries();
+                    queryCounties();
                 }
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentLevel==LEVEL_COUNTRY){
+                if (currentLevel==LEVEL_COUNTY){
                     queryCities();
                 }else if (currentLevel==LEVEL_CITY){
                     queryProvinces();
@@ -129,28 +129,28 @@ public class ChooseAreaFragment extends Fragment {
             currentLevel=LEVEL_CITY;
         }else {
             int provinceCode=selectedProvince.getProvinceCode();
-            String address="http://guolin.tech/api/china"+provinceCode;
+            String address="http://guolin.tech/api/china/"+provinceCode;
             queryFromServer(address,"city");
         }
     }/* 查询市内所有县，优先从数据库查询，如果没有查询到再去服务器查找*/
-    private void queryCountries(){
+    private void queryCounties(){
         titleText.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
         countyList = DataSupport.where("cityid=?",String.valueOf(selectedCity.getId())
         ).find(County.class);
         if (countyList.size()>0){
             dataList.clear();
-            for (County county : countyList){
+            for (County county:countyList){
                 dataList.add(county.getCountyName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
-            currentLevel=LEVEL_COUNTRY;
+            currentLevel=LEVEL_COUNTY;
         }else {
             int provinceCode=selectedProvince.getProvinceCode();
             int cityCode=selectedCity.getCityCode();
-            String address="http://guolin.tech/api/china"+provinceCode+"/"+cityCode;
-            queryFromServer(address,"country");
+            String address="http://guolin.tech/api/china/"+provinceCode+ "/" +cityCode;
+            queryFromServer(address,"county");
         }
     }/* 根据上传的地址和类型从服务器上查询省市县数据*/
     private void queryFromServer(String address, final String type) {
@@ -171,17 +171,17 @@ public class ChooseAreaFragment extends Fragment {
                  getActivity().runOnUiThread(new Runnable() {
                         @Override
                          public void run() {
-                                                     closeProgressDialog();
-                                                       if ("province".equals(type)) {
-                                                              queryProvinces();
-                                                        } else if ("city".equals(type)) {
-                                                               queryCities();
-                                                          } else if ("county".equals(type)) {
-                                                               queryCountries();
-                                                             }
-                                                   }
+                            closeProgressDialog();
+                            if ("province".equals(type)) {
+                                queryProvinces();
+                                } else if ("city".equals(type)) {
+                                queryCities();
+                                } else if ("county".equals(type)) {
+                                queryCounties();
+                                }
+                                }
                   });
-                                   }
+                 }
                           }
                           @Override
            public void onFailure(Call call, IOException e) {
