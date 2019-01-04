@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/animLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:background="@drawable/klpe"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/left"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/bacl"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/right"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/bacr" />
+
+    </LinearLayout>
+</LinearLayout>

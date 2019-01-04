@@ -27,7 +27,8 @@ import com.coolweather.android.util.HttpUtil;
 import com.coolweather.android.util.Utility;
 
 import java.io.IOException;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 import okhttp3.Call;
@@ -43,6 +44,7 @@ public class WeatherActivity extends AppCompatActivity {
     private ScrollView weatherLayout;
     private TextView titleCity;
     private TextView titleUpdadteTime;
+    private TextView dateTime;
     private TextView degreeText;
     private TextView weatherInfoText;
     private LinearLayout forecastLayout;
@@ -67,6 +69,7 @@ public class WeatherActivity extends AppCompatActivity {
         weatherLayout = (ScrollView) findViewById(R.id.weather_layout);
         titleCity = (TextView) findViewById(R.id.title_city);
        titleUpdadteTime = (TextView) findViewById(R.id.title_update_time);
+       dateTime=(TextView)findViewById(R.id.date_time);
         degreeText = (TextView) findViewById(R.id.degree_text);
         weatherInfoText = (TextView) findViewById(R.id.weather_info_text);
         forecastLayout = (LinearLayout) findViewById(R.id.forecast_layout);
@@ -118,7 +121,8 @@ public class WeatherActivity extends AppCompatActivity {
        * 根据天气id请求城市天气信息。
   */
  public void requestWeather(final String weatherId) {
-     String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId + "&key=ae7e3ff8e9eb41f4ab7121ce90d7bc90";
+     String weatherUrl = "http://guolin.tech/api/weather?cityid=" + weatherId +
+             "&key=ae7e3ff8e9eb41f4ab7121ce90d7bc90";
      HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
 
          @Override
@@ -129,13 +133,15 @@ public class WeatherActivity extends AppCompatActivity {
                  @Override
                  public void run() {
                      if (weather != null && "ok".equals(weather.status)) {
-                         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+                         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences
+                                 (WeatherActivity.this).edit();
                          editor.putString("weather", responseText);
                          editor.apply();
                          mWeatherId=weather.basic.weatherId;
                          showWeatherInfo(weather);
                      } else {
-                         Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
+                         Toast.makeText(WeatherActivity.this, "获取天气信息失败",
+                                 Toast.LENGTH_SHORT).show();
                      }
                      swipeRefresh.setRefreshing(false);
                  }
@@ -195,11 +201,17 @@ public class WeatherActivity extends AppCompatActivity {
              String updateTime = weather.basic.update.updateTime.split( " ")[1];
              String degree = weather.now.temperature + "℃";
              String weatherInfo = weather.now.more.info;
+             SimpleDateFormat dateFormat = new SimpleDateFormat(" yyyy/MM/dd  ");
+             String date = dateFormat.format(new Date());
              titleCity.setText(cityName);
              titleUpdadteTime.setText(updateTime);
+             dateTime.setText(date);
              degreeText.setText(degree);
              weatherInfoText.setText(weatherInfo);
              forecastLayout.removeAllViews();
+             long ms = System.currentTimeMillis();
+
+
              for (Forecast forecast : weather.forecastList) {
                  View view = LayoutInflater.from(this).inflate(R.layout.forceast_item, forecastLayout, false);
                  TextView dateText = (TextView) view.findViewById(R.id.date_text);
@@ -213,7 +225,7 @@ public class WeatherActivity extends AppCompatActivity {
                  forecastLayout.addView(view);
              }
              if (weather.aqi != null) {
-                 aqiText.setText(weather.aqi.city.api);
+                 aqiText.setText(weather.aqi.city.aqi);
                  pm25Text.setText(weather.aqi.city.pm25);
              }
              String comfort = "舒适度：" + weather.suggestion.comfort.info;
